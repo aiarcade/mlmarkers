@@ -17,7 +17,7 @@
    <widget class="QTabWidget" name="trainingTab_2">
     <property name="geometry">
      <rect>
-      <x>100</x>
+      <x>50</x>
       <y>20</y>
       <width>881</width>
       <height>641</height>
@@ -43,7 +43,7 @@
        <string/>
       </property>
       <property name="pixmap">
-       <pixmap>1.png</pixmap>
+       <pixmap>../../../.designer/backup/1.png</pixmap>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox">
@@ -241,6 +241,42 @@
       </property>
       <property name="text">
        <string>Start Training</string>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="algComboBox">
+      <property name="geometry">
+       <rect>
+        <x>660</x>
+        <y>10</y>
+        <width>191</width>
+        <height>26</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="algLabel">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>10</y>
+        <width>91</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Algorithm</string>
+      </property>
+     </widget>
+     <widget class="QProgressBar" name="trainProgressBar">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>570</y>
+        <width>161</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="value">
+       <number>24</number>
       </property>
      </widget>
     </widget>

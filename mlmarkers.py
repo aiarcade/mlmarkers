@@ -5,6 +5,10 @@ from selectionarea import SelectionArea
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 from PyQt5.QtWidgets import *
+import sys
+from multiprocessing import Process
+from generatedataset import GenDataSet
+from status import *
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -27,7 +31,7 @@ class Ui_MainWindow(object):
 
         
         #self.trainImageLabel.setText("")
-        self.imageScene.setImage(QtGui.QPixmap("1.png"))
+        self.imageScene.setImage(QtGui.QPixmap("2.png"))
         self.trainImageLabel.setObjectName("trainImageLabel")
         self.groupBox = QtWidgets.QGroupBox(self.trainingTab)
         self.groupBox.setGeometry(QtCore.QRect(550, 50, 311, 501))
@@ -95,7 +99,7 @@ class Ui_MainWindow(object):
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
 
-        self.retranslateUi(MainWindow)
+        
         self.trainingTab_2.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -114,7 +118,50 @@ class Ui_MainWindow(object):
         self.markerDelButton.clicked.connect(self.removeMarker)
         self.trainButton.clicked.connect(self.startTraining)
 
+
+        self.progressBar = QtWidgets.QProgressBar(self.trainingTab)
+        self.progressBar.setGeometry(QtCore.QRect(600, 570, 100, 21))
+        self.progressBar.setProperty("value",0)
+        self.progressBar.setObjectName("progressBar")
+        self.algComboBox = QtWidgets.QComboBox(self.trainingTab)
+        self.algComboBox.setGeometry(QtCore.QRect(615, 10, 250, 26))
+        self.algComboBox.setObjectName("algComboBox")
+        self.algComboBox.addItem("CNN")
+        self.algComboBox.addItem("SVM")
+        self.algLabel = QtWidgets.QLabel(self.trainingTab)
+        self.algLabel.setGeometry(QtCore.QRect(550, 10, 91, 21))
+        self.algLabel.setObjectName("algLabel")
+
+        self.targetgraphicsView = QtWidgets.QGraphicsView(self.detectionTab)
+        self.targetgraphicsView.setGeometry(QtCore.QRect(30, 30, 591, 561))
+        self.targetgraphicsView.setObjectName("targetgraphicsView")
+        self.OutpulineEdit = QtWidgets.QLineEdit(self.detectionTab)
+        self.OutpulineEdit.setGeometry(QtCore.QRect(640, 200, 211, 21))
+        self.OutpulineEdit.setObjectName("OutpulineEdit")
+        self.label = QtWidgets.QLabel(self.detectionTab)
+        self.label.setGeometry(QtCore.QRect(640, 170, 101, 20))
+        self.label.setObjectName("label")
+        self.label_4 = QtWidgets.QLabel(self.detectionTab)
+        self.label_4.setGeometry(QtCore.QRect(640, 50, 121, 21))
+        self.label_4.setObjectName("label_4")
+        self.srcImageEdit = QtWidgets.QLineEdit(self.detectionTab)
+        self.srcImageEdit.setGeometry(QtCore.QRect(640, 80, 121, 21))
+        self.srcImageEdit.setObjectName("srcImageEdit")
+        self.srcSelectButton = QtWidgets.QPushButton(self.detectionTab)
+        self.srcSelectButton.setGeometry(QtCore.QRect(770, 70, 91, 40))
+        self.srcSelectButton.setObjectName("srcSelectButton")
+        self.detectPushButton = QtWidgets.QPushButton(self.detectionTab)
+        self.detectPushButton.setGeometry(QtCore.QRect(720, 560, 140, 32))
+        self.detectPushButton.setObjectName("detectPushButton")
+
+
+
+
+
         self.lastSelectedMarkerKey=-1
+        self.dataset=GenDataSet(1000,"./train",[100,100],self.progressBar,self.trainButton)
+        self.threadpool = QThreadPool()
+        self.retranslateUi(MainWindow)
         
     def tableClicked(self, clickedIndex):
         row=clickedIndex.row()
@@ -150,7 +197,10 @@ class Ui_MainWindow(object):
         self.lastSelectedMarkerKey=-1
 
     def startTraining(self):
-        pass
+        markerpixs=self.imageScene.getSetlectedMarkers()
+        self.dataset.setImages(markerpixs)
+        self.threadpool.start(self.dataset) 
+
 
 
 
@@ -163,10 +213,13 @@ class Ui_MainWindow(object):
         self.markerAddButton.setText(_translate("MainWindow", "ADD"))
         self.markerDelButton.setText(_translate("MainWindow", "DELETE"))
         self.label_4.setText(_translate("MainWindow", "Selected Area"))
-        
+        self.algLabel.setText(_translate("MainWindow", "Algorithm"))
         self.trainingTab_2.setTabText(self.trainingTab_2.indexOf(self.trainingTab), _translate("MainWindow", "Training"))
         self.trainingTab_2.setTabText(self.trainingTab_2.indexOf(self.detectionTab), _translate("MainWindow", "Detection"))
-
+        self.label.setText(_translate("MainWindow", "Output Directory"))
+        self.label_4.setText(_translate("MainWindow", "Source Image"))
+        self.srcSelectButton.setText(_translate("MainWindow", "Select"))
+        self.detectPushButton.setText(_translate("MainWindow", "Detect"))
 
 if __name__ == "__main__":
     import sys
