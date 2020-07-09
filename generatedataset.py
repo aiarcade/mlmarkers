@@ -29,11 +29,11 @@ class GenDataSet(QRunnable):
         self.dia_len=0
         self.pgbar=pgbar
         self.trbutton=button
-        if os.path.exists("train"):
-            shutil.rmtree("train")
-        os.makedirs("train")
-        os.makedirs("train/positive")
-        os.makedirs("train/negative")
+        if not os.path.exists("train"):
+           #shutil.rmtree("train")
+            os.makedirs("train")
+            os.makedirs("train/positive")
+            os.makedirs("train/negative")
         self.modeltype=0
     def setImages(self,input_images):
         self.image_list=input_images

@@ -14,7 +14,7 @@ class MLDetection(object):
 
     def __init__(self,line_length=100,line_width=10,is_write=True,out_dir="out",learning_width=0):
         
-        self.line_length=line_length
+        
         self.line_width=line_width
         self.is_write=is_write
         self.out_dir=out_dir
@@ -26,6 +26,7 @@ class MLDetection(object):
             self.input_shape = (1, learning_width, learning_width)
         else:
             self.input_shape = (learning_width, learning_width, 1)
+        self.line_length=learning_width
         self.detectedImage=None
         
     def detectml(self,window):
@@ -70,7 +71,7 @@ class MLDetection(object):
 
 
         for line in lines:      
-            org_gray=gray.copy()
+            org_gray=processCopy.copy()
             c =np.asarray(np.where(labels == line)).T
             top = tuple(reversed(tuple(c[np.argmin(c[:, 1])])))
             bottom= tuple(reversed(tuple(c[np.argmax(c[:, 1])])))
@@ -93,8 +94,10 @@ class MLDetection(object):
                 stencil  = np.zeros(gray.shape).astype(np.uint8)
                 cv2.fillPoly(stencil,[box],255)
                 sel      = stencil != 255 # select everything that is not mask_value
-                org_gray[sel] = 0         # and fill it with fill_color
-                cv2.imwrite(self.out_dir+"/marker"+str(line)+".jpg",org_gray)
+                
+                #org_gray[sel] = 0         # and fill it with fill_color
+                res = cv2.bitwise_and(org_gray,org_gray,mask = stencil)
+                cv2.imwrite(self.out_dir+"/marker"+str(line)+".jpg",res)
                 cv2.drawContours(processCopy,[box],0,(0,0,255),1) 
         self.detectedImage=processCopy.copy()   
         
